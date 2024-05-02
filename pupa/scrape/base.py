@@ -4,6 +4,7 @@ import uuid
 import logging
 import datetime
 from collections import defaultdict, OrderedDict
+from typing import List
 
 import jsonschema
 from jsonschema import Draft3Validator, FormatChecker
@@ -20,9 +21,11 @@ def uri_blank(value):
 
 
 @FormatChecker.cls_checks("uri")
-def check_uri(val):
-    return val and val.startswith(("http://", "https://", "ftp://")) and " " not in val
-
+def check_uri(val: str) -> bool:
+    """
+    Check that val is a uri. 
+    """
+    return val and hasattr(val, 'startswith') and val.startswith(("http://", "https://", "ftp://")) and (" " not in val)
 
 def cleanup_list(obj, default):
     if not obj:
@@ -241,11 +244,14 @@ class BaseModel(object):
 
 
 class SourceMixin(object):
+
+    source: List[str]
+
     def __init__(self):
         super(SourceMixin, self).__init__()
         self.sources = []
 
-    def add_source(self, url, *, note=""):
+    def add_source(self, url: str, *, note: str="") -> None:
         """Add a source URL from which data was collected"""
         new = {"url": url, "note": note}
         self.sources.append(new)
@@ -279,11 +285,17 @@ class IdentifierMixin(object):
 
 
 class OtherNameMixin(object):
+    """
+    Mixin gives an object the ability to add extra names.
+    """
     def __init__(self):
         super(OtherNameMixin, self).__init__()
         self.other_names = []
 
     def add_name(self, name, *, start_date="", end_date="", note=""):
+        """
+        Give an object an alternate name.
+        """
         other_name = {"name": name}
         if start_date:
             other_name["start_date"] = start_date

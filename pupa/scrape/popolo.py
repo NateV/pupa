@@ -197,6 +197,12 @@ class Person(
         org_name=None,
         appointment=False
     ):
+        """
+        Record that someone is holding a particular Post in an 
+        Organization.
+
+        For example, record that John Q. Public, member of the Georgia State House has the Post of Rep for Disctrict 1.
+        """
         if org_name:
             org_id = _make_pseudo_id(classification=org_classification, name=org_name)
         else:

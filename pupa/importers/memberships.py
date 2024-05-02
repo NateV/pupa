@@ -34,7 +34,6 @@ class MembershipImporter(BaseImporter):
         # post_id is optional - might exist in DB but not scraped here?
         if membership["post_id"]:
             spec["post_id"] = membership["post_id"]
-
         if membership["person_name"]:
             spec["person_name"] = membership["person_name"]
 
@@ -55,10 +54,9 @@ class MembershipImporter(BaseImporter):
             # we have to assume it is not a party if we want to avoid
             # doing a lookup here
             is_party = False
-
         data["organization_id"] = self.org_importer.resolve_json_id(
             data["organization_id"]
-        )
+            )
         data["person_id"] = self.person_importer.resolve_json_id(
             data["person_id"], allow_no_match=True
         )
